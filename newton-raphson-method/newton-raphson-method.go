@@ -5,21 +5,39 @@ import (
 	"math"
 )
 
-const DIFF = 0.000001
+// Sqrt computes the square root of x2 using Newton Raphson method
+// Reference - https://en.wikipedia.org/wiki/Newton%27s_method
+func Sqrt(x2 float64) float64 {
+	const epsilon = 0.000001
 
-// Sqrt computes the square root of x using Newton's method
-func Sqrt(x float64) float64 {
-	fmt.Printf("sqrt of %f is %f\n", x, math.Sqrt(x))
-    newtonsMethod := func(z, x float64) float64 {
-        return z - (z * z - x) / (2 * z)        
-    }
-    z := 1.0
-	for nm := newtonsMethod(1.0, x); math.Abs(nm - z) > DIFF; {        
-		nm = newtonsMethod(nm, x)
+	// function
+	f := func(x float64) float64 {
+		return x*x - x2
 	}
-	return z
+
+	// derivative
+	fd := func(x float64) float64 {
+		return x * 2
+	}
+
+	newtonRaphson := func(x float64) float64 {
+		return x - f(x)/fd(x)
+	}
+
+	xn := newtonRaphson(1.0)
+	for i := 0; i < 10; i++ {
+		xn1 := newtonRaphson(xn)
+		if math.Abs(xn-xn1) < epsilon {
+			break
+		}
+		xn = xn1
+	}
+
+	return xn
 }
 
 func main() {
-	fmt.Println(Sqrt(2))
+	x := 3.0
+	fmt.Printf("Sqrt of %f using math.Sqrt: %f\n", x, math.Sqrt(x))
+	fmt.Printf("Sqrt of %f using Newton Raphson: %f\n", x, Sqrt(x))
 }
