@@ -8,8 +8,6 @@ import (
 // Sqrt computes the square root of x2 using Newton Raphson method
 // Reference - https://en.wikipedia.org/wiki/Newton%27s_method
 func Sqrt(x2 float64) float64 {
-	const epsilon = 0.000001
-
 	// function
 	f := func(x float64) float64 {
 		return x*x - x2
@@ -25,12 +23,15 @@ func Sqrt(x2 float64) float64 {
 	}
 
 	xn := newtonRaphson(1.0)
-	for i := 0; i < 10; i++ {
-		xn1 := newtonRaphson(xn)
-		if math.Abs(xn-xn1) < epsilon {
+	i := 0
+	for xn1 := newtonRaphson(xn); math.Abs(xn-xn1) > 0.000001; {
+		if i == 10 {
+			fmt.Println("Loop has reached its limit and will no longer evaluate.")
 			break
 		}
 		xn = xn1
+		xn1 = newtonRaphson(xn)
+		i++
 	}
 
 	return xn
