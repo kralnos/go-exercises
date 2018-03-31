@@ -1,3 +1,4 @@
+// https://tour.golang.org/flowcontrol/8
 package main
 
 import (
